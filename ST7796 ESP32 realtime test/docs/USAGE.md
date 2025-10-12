@@ -27,40 +27,62 @@ README.md의 핀맵을 참고하여 다음과 같이 연결합니다:
 
 ### ESP32 설정
 
-1. **Arduino IDE 설치**
-   - [Arduino IDE](https://www.arduino.cc/en/software) 다운로드 및 설치
+1. **PlatformIO 설치**
+   - [Visual Studio Code](https://code.visualstudio.com/) 다운로드 및 설치
+   - VS Code에서 PlatformIO IDE 확장 설치
+     - Extensions 탭 열기 (Ctrl+Shift+X / Cmd+Shift+X)
+     - "PlatformIO IDE" 검색 후 설치
 
-2. **ESP32 보드 매니저 추가**
-   - Arduino IDE에서 `파일 > 환경설정`
-   - 추가 보드 매니저 URLs에 추가:
-     ```
-     https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
-     ```
-   - `도구 > 보드 > 보드 매니저`에서 "esp32" 검색 후 설치
+   또는 PlatformIO Core CLI 설치:
+   ```bash
+   # macOS/Linux
+   curl -fsSL https://raw.githubusercontent.com/platformio/platformio-core-installer/master/get-platformio.py -o get-platformio.py
+   python3 get-platformio.py
 
-3. **필요한 라이브러리 설치**
-   - Arduino IDE 라이브러리 매니저에서 설치:
-     - TFT_eSPI
-     - TJpg_Decoder
+   # 또는 pip로 설치
+   pip install platformio
+   ```
 
-4. **TFT_eSPI 설정**
-   - `esp32_receiver/User_Setup.h` 파일을 Arduino 라이브러리 폴더의 TFT_eSPI 폴더에 복사
-   - Windows: `C:\Users\{username}\Documents\Arduino\libraries\TFT_eSPI\`
-   - macOS: `~/Documents/Arduino/libraries/TFT_eSPI/`
+2. **프로젝트 열기**
+   - VS Code에서 `firmware` 폴더 열기
+   - PlatformIO가 자동으로 `platformio.ini` 파일을 인식하고 필요한 도구와 라이브러리를 설치합니다
 
-5. **ESP32 코드 수정**
-   - `esp32_receiver/esp32_receiver.ino` 파일 열기
+3. **라이브러리 및 설정 (자동 설치)**
+   - `platformio.ini` 파일에 다음이 이미 설정되어 있습니다:
+     - ESP32 플랫폼 및 보드 설정
+     - 필요한 라이브러리 (TFT_eSPI, TJpg_Decoder)
+     - TFT 디스플레이 핀맵 및 설정
+     - 빌드 플래그 (User_Setup.h 파일 불필요)
+
+4. **ESP32 코드 수정**
+   - `firmware/src/main.cpp` 파일 열기
    - WiFi 정보 수정:
      ```cpp
      const char* ssid = "YOUR_WIFI_SSID";       // 실제 WiFi SSID로 변경
      const char* password = "YOUR_WIFI_PASSWORD"; // 실제 WiFi 비밀번호로 변경
      ```
 
-6. **ESP32에 업로드**
-   - 보드: "ESP32 Dev Module" 선택
-   - 포트: ESP32가 연결된 포트 선택
-   - 업로드 속도: 115200
-   - 업로드 버튼 클릭
+5. **ESP32에 빌드 및 업로드**
+
+   **방법 1: VS Code 사용**
+   - VS Code 하단 상태바의 PlatformIO 버튼 사용:
+     - ✓ (체크) 버튼: 빌드
+     - → (화살표) 버튼: 업로드
+     - 🔌 (플러그) 버튼: 시리얼 모니터
+
+   **방법 2: CLI 사용**
+   ```bash
+   cd firmware
+
+   # 빌드
+   pio run
+
+   # 업로드 (ESP32 연결 후)
+   pio run --target upload
+
+   # 시리얼 모니터 열기
+   pio device monitor
+   ```
 
 ### PC(맥북) 설정
 
@@ -90,7 +112,9 @@ README.md의 핀맵을 참고하여 다음과 같이 연결합니다:
    ```
 
 2. **ESP32 IP 주소 확인**
-   - Arduino IDE 시리얼 모니터 열기 (115200 baud)
+   - PlatformIO 시리얼 모니터 열기
+     - VS Code: 하단 상태바의 🔌 (플러그) 버튼 클릭
+     - CLI: `pio device monitor` 명령 실행
    - ESP32 리셋 또는 전원 재연결
    - WiFi 연결 후 표시되는 IP 주소 확인
 
