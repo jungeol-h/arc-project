@@ -1,0 +1,3 @@
+# PC 송신 측 Python 패키지 의존성
+opencv-python==4.8.1.78
+numpy==1.24.3
